@@ -1,4 +1,5 @@
 import load, { resolve } from '@proload/core';
+import typescript from '@proload/plugin-typescript';
 import type { AstroConfig, AstroIntegration } from 'astro';
 import autoprefixerPlugin from 'autoprefixer';
 import fs from 'fs/promises';
@@ -7,6 +8,8 @@ import tailwindPlugin, { type Config as TailwindConfig } from 'tailwindcss';
 import resolveConfig from 'tailwindcss/resolveConfig.js';
 import { fileURLToPath } from 'url';
 import type { CSSOptions, UserConfig } from 'vite';
+
+load.use([typescript]);
 
 function getDefaultTailwindConfig(srcUrl: URL): TailwindConfig {
 	return resolveConfig({
@@ -38,7 +41,7 @@ async function getUserConfig(root: URL, configPath?: string, isRestart = false) 
 		})) as string;
 
 		const { dir, base } = path.parse(resolvedConfigPath);
-		const tempConfigPath = path.join(dir, `.temp.${Date.now()}.${base}`);
+		const tempConfigPath = path.join(dir, `temp.${Date.now()}.${base}`);
 		await fs.copyFile(resolvedConfigPath, tempConfigPath);
 
 		let result: load.Config<Record<any, any>> | undefined;
